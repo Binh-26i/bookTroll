@@ -14,8 +14,7 @@ const imgNames = [
 const book = document.getElementById("book");
 const totalSheets = Math.ceil(imgNames.length / 2) + 2;
 let currentZIndex = 100;
-
-
+let currentPageIndex = 0;
 
 for (let i = 0; i < totalSheets; i++) {
   const page = document.createElement("div");
@@ -47,7 +46,6 @@ for (let i = 0; i < totalSheets; i++) {
     if (backImg < imgNames.length) {
       back.innerHTML = `<img src="img/${imgNames[backImg]}" alt="Trang ${backImg + 1}">`;
     }
-
   }
 
   pageInner.appendChild(front);
@@ -57,7 +55,13 @@ for (let i = 0; i < totalSheets; i++) {
   page.style.zIndex = currentZIndex--;
 
   page.addEventListener("click", () => {
-    page.classList.toggle("flipped");
+    if (page.classList.contains("flipped")) {
+      page.classList.remove("flipped");
+      currentPageIndex = Math.max(currentPageIndex - 1, 0);
+    } else {
+      page.classList.add("flipped");
+      currentPageIndex = Math.min(currentPageIndex + 1, totalSheets - 1);
+    }
   });
 
   book.appendChild(page);
@@ -65,6 +69,7 @@ for (let i = 0; i < totalSheets; i++) {
 
 let touchStartX = 0;
 let touchEndX = 0;
+let isFlipping = false;
 
 book.addEventListener("touchstart", function (e) {
   touchStartX = e.changedTouches[0].screenX;
@@ -76,16 +81,27 @@ book.addEventListener("touchend", function (e) {
 });
 
 function handleSwipe() {
+  if (isFlipping) return;
+
   const pages = document.querySelectorAll(".page");
-  const flippedPages = document.querySelectorAll(".page.flipped");
 
   if (touchEndX < touchStartX - 50) {
-    // Vuốt từ phải sang trái → lật tới
+    // Vuốt sang trái → lật tới
     const nextPage = Array.from(pages).find(p => !p.classList.contains("flipped"));
-    if (nextPage) nextPage.classList.add("flipped");
+    if (nextPage) {
+      isFlipping = true;
+      nextPage.classList.add("flipped");
+      currentPageIndex++;
+      setTimeout(() => isFlipping = false, 1000);
+    }
   } else if (touchEndX > touchStartX + 50) {
-    // Vuốt từ trái sang phải → lật về
+    // Vuốt sang phải → lật về
     const lastFlipped = Array.from(pages).reverse().find(p => p.classList.contains("flipped"));
-    if (lastFlipped) lastFlipped.classList.remove("flipped");
+    if (lastFlipped) {
+      isFlipping = true;
+      lastFlipped.classList.remove("flipped");
+      currentPageIndex--;
+      setTimeout(() => isFlipping = false, 1000);
+    }
   }
 }
