@@ -32,7 +32,7 @@ for (let i = 0; i < totalSheets; i++) {
 
   if (isCoverFront) {
     front.innerHTML = `<div class="cover-title">Bộ sưu tập<br>
-                          <p style="font-size: 12px;">Cân nhắc trước khi mở 🤔🤔</p>
+                          <p style="font-size: 12px;">Cân nhắc trước khi mở</p>
                       </div>`;
     back.innerHTML = `<img src="img/${imgNames[0]}" alt="Trang 1">`;
   } else if (isCoverBack) {
