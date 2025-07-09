@@ -132,9 +132,9 @@ body {
 /* ========== RESPONSIVE ========== */
 @media (max-width: 575px) {
   .book-container {
-    width: 200px;
+    width: 180px;
     height: 320px;
-    margin-left: 200px;
+    margin-left: 180px;
   }
 }
 
